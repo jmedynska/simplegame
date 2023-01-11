@@ -10,13 +10,19 @@ pygame.display.set_caption("Breakin' Bricks")
 bat = pygame.image.load('./simplegame/images/paddle.png')
 bat = bat.convert_alpha()
 bat_rect = bat.get_rect()
-bat_rect[1] = screen.get_height() - 100
+bat_rect[1] = screen.get_height() - 100  #initial vertical value
+bat_rect[0] = (screen.get_width()-bat_rect[2])/2 #initial horizontal value
+
 
 #ball
 ball = pygame.image.load('./simplegame/images/football.png')
 ball = ball.convert_alpha()
 ball_rect = ball.get_rect()
-
+ball_start = (200,200)
+ball_speed = (3.0,3.0)
+ball_served = False
+sx, sy = ball_speed
+ball_rect.topleft = ball_start
 
 #brick
 brick = pygame.image.load('./simplegame/images/brick.png')
@@ -45,22 +51,30 @@ while not game_over:
 
     for b in bricks:
         screen.blit(brick, b)
+
+    screen.blit(ball,(ball_rect))
+    screen.blit(bat, (bat_rect))
+    # bat movement control
     pressed = pygame.key.get_pressed()
     if pressed[K_RIGHT]:
-        bat_rect[0]+=0.5* dt
+        bat_rect[0] += 0.5 * dt
     if pressed[K_LEFT]:
-        bat_rect[0]-=0.5* dt
-    if pressed[K_SPACE]:
-        bat_rect[0]
+        bat_rect[0] -= 0.5 * dt
     if bat_rect[0] > (screen.get_width()-bat_rect[2]):
         bat_rect[0] = screen.get_width()-bat_rect[2]
     if bat_rect[0] < 0:
         bat_rect[0] = 0
+    #ball restart
+    if pressed[K_SPACE]:
+        ball_served = True
+    if ball_served:
+        ball_rect[0] += sx
+        ball_rect[1] += sy
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
-    screen.blit(bat, (bat_rect[0],bat_rect[1]))
+    
     pygame.display.update()
         
 pygame.quit()
