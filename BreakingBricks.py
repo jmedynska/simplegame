@@ -60,16 +60,30 @@ while not game_over:
         bat_rect[0] += 0.5 * dt
     if pressed[K_LEFT]:
         bat_rect[0] -= 0.5 * dt
+    #screen restriction for bat
     if bat_rect[0] > (screen.get_width()-bat_rect[2]):
         bat_rect[0] = screen.get_width()-bat_rect[2]
     if bat_rect[0] < 0:
         bat_rect[0] = 0
-    #ball restart
+    #ball serve
     if pressed[K_SPACE]:
         ball_served = True
     if ball_served:
         ball_rect[0] += sx
         ball_rect[1] += sy
+    #screen restriction for ball
+    if ball_rect[0] >= (screen.get_width()-ball_rect[2]):
+        ball_rect[0] = screen.get_width()-ball_rect[2]
+        sx *= -1
+    if ball_rect[0] <= 0:
+        ball_rect[0] = 0
+        sx *= -1
+    if ball_rect[1] >= (screen.get_height()-ball_rect[3]):
+        ball_rect[1] = screen.get_height()-ball_rect[3]
+        sy *= -1
+    if ball_rect[1] <= 0:
+        ball_rect[1] = 0
+        sy *= -1
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
