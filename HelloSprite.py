@@ -5,6 +5,7 @@ screen_height = 700
 screen = pygame.display.set_mode((screen_width, screen_height), 0, 32) #Main window
 sprite1 = pygame.image.load('./simplegame/images/football.png') #Ball image
 sprite2 = pygame.image.load('./simplegame/images/butterfly.png')
+sprite2 = pygame.transform.scale(sprite2,(32,32)) #Resizing object
 sprite2_width = sprite2.get_width()
 sprite2_height = sprite2.get_height()
 
@@ -19,6 +20,6 @@ while not game_over:
         if event.type == pygame.QUIT:
             game_over = True
     #screen.blit(sprite1, (384, 284)) # ball in the center of the screen
-    screen.blit(sprite2, (screen_width/2-sprite2_width/2, screen_height/2 - sprite2_height/2))
+    screen.blit(sprite2, (screen.get_width()/2-sprite2_width/2, screen.get_height()/2 - sprite2_height/2))
     pygame.display.update()
 pygame.quit()
