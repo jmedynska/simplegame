@@ -19,6 +19,15 @@ while not game_over:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
+    pressed = pygame.key.get_pressed()
+    if pressed[K_UP]:
+        y-=0.5
+    if pressed[K_DOWN]:
+        y+=0.5
+    if pressed[K_RIGHT]:
+        x+=0.5
+    if pressed[K_LEFT]:
+        x-=0.5
     screen.blit(sprite2, (x,y))
     pygame.display.update()
 pygame.quit()
