@@ -19,7 +19,11 @@ clock = pygame.time.Clock()
 while not game_over:
     dt = clock.tick(100)
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.MOUSEMOTION:
+            x, y = event.pos 
+            x -= sprite2_width/2
+            y -= sprite2_height/2
+        elif event.type == pygame.QUIT:
             game_over = True
     pressed = pygame.key.get_pressed()
     if pressed[K_UP]:
@@ -41,6 +45,6 @@ while not game_over:
     if y < 0:
         y = 0
     screen.fill((0,0,0))
-    screen.blit(sprite2, (x,y))
+    screen.blit(sprite2, (x, y))
     pygame.display.update()
 pygame.quit()
