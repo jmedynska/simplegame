@@ -79,7 +79,27 @@ while not game_over:
         bat_rect[1] <= (ball_rect[1]+ ball_rect.height) and \
         sy > 0:
         sy *= -1
+        sx *= 1.01  #increase difficulty
+        sy *= 1.01
         continue
+
+    #deletion of bricks
+    delete_brick = None
+    for b in bricks:
+        bx, by = b
+        if  bx <= ball_rect[0] <= bx + brick_rect.width and \
+            by <= ball_rect[1] <= by + brick_rect.height :
+            delete_brick = b
+
+            if ball_rect[0] <= bx + 2:
+                sx *= -1
+            elif ball_rect[0] >= bx + brick_rect.width - 2:
+                sx *= -1
+            if ball_rect[1] <= by + 2 or ball_rect[1] >= by + ball_rect.height - 2:
+                sy *= -1
+    
+    if delete_brick is not None:
+        bricks.remove(delete_brick)
     #screen restriction for ball
     #right
     if ball_rect[0] >= (screen.get_width()-ball_rect[2]):
@@ -89,11 +109,10 @@ while not game_over:
     if ball_rect[0] <= 0:
         ball_rect[0] = 0
         sx *= -1
-    #bottom
+    #bottom - end of the round
     if ball_rect[1] >= (screen.get_height()-ball_rect[3]):
         ball_rect.topleft = ball_start
         ball_served = False
-        #game_over = True
         continue
     #top
     if ball_rect[1] <= 0:
