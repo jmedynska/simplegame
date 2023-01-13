@@ -97,6 +97,7 @@ while not game_over:
                 sx *= -1
             if ball_rect[1] <= by + 2 or ball_rect[1] >= by + ball_rect.height - 2:
                 sy *= -1
+            break 
     
     if delete_brick is not None:
         bricks.remove(delete_brick)
