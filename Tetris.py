@@ -41,6 +41,9 @@ def draw_grid(colour = (100,100,100)):
         for x in range(cols):#cols
             pygame.draw.rect(screen, colour, [x * grid_size + gap_width, y * grid_size + gap_height, 
             grid_size, grid_size], 1)
+            if game_board[x][y] != (0,0,0):
+                pygame.draw.rect(screen, game_board[x][y], 
+                [x * grid_size + gap_width+1, y * grid_size + gap_height+1, grid_size-1, grid_size-1])      #draw the game board
 
 def drop_block():
     can_drop = True
@@ -51,6 +54,12 @@ def drop_block():
                     can_drop = False
     if can_drop:
         block.y+=1
+    else:
+        for y in range(3):
+            for x in range(3):
+                if y * 3 + x in block.shape():
+                    game_board[x + block.x][y + block.y] = (0,255,0)
+    return can_drop
 
 def side_move(dx):
     can_move_left = True
@@ -91,6 +100,8 @@ for i in range(cols):
     for j in range(rows):
         new_col.append((0,0,0))
     game_board.append(new_col)
+
+
 while not game_over:
     clock.tick(fps)
     for event in pygame.event.get():
@@ -104,9 +115,11 @@ while not game_over:
             side_move(1)
     screen.fill((0,0,0))
     draw_grid()
-    draw_block()
-    if event.type != pygame.KEYDOWN:
-        drop_block()
+    if block is not None:
+        draw_block()
+        if event.type != pygame.KEYDOWN:
+            if not drop_block():
+                block = None
 
     pygame.display.update()
 pygame.quit()
