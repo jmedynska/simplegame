@@ -114,6 +114,19 @@ def side_move(dx):
         drop_block()
    
 
+def find_lines():
+    lines = 0
+    for y in range(rows):
+        empty = 0
+        for x in range(cols):
+            if game_board[x][y] == (0,0,0):
+                empty += 1              # checking blank spots in line
+        if empty == 0:
+            lines += 1   #counting lines
+            for y2 in range(y,1, -1): 
+                for x2 in range(cols):
+                    game_board[x2][y2] = game_board[x2][y2-1] #getting rid of line
+    return lines
 
 
 pygame.init()
@@ -140,8 +153,13 @@ for i in range(cols):
     game_board.append(new_col)
 
 
+score = 0
+font = pygame.font.SysFont('Arial',25,True,False)
+pause_text = font.render("Paused", True, (255,255,255))
+
 while not game_over:
     clock.tick(fps)
+   
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
@@ -157,17 +175,23 @@ while not game_over:
             side_move(-1)
         if event.key == pygame.K_RIGHT:
             side_move(1)
-        
+    
+    
     if pause:
-        
+        screen.blit(pause_text, [screen.get_width()//2 - pause_text.get_width()//2,0])
+        pygame.display.update()
         continue
+
     screen.fill((0,0,0))
     draw_grid()
     if block is not None:
         draw_block()
         if event.type != pygame.KEYDOWN:
             if not drop_block():
+                score += find_lines()
                 block = Block(random.randint(2,cols-3),0)
-
+    
+    text = font.render("Score: " + str(score), True, (255,255,255))
+    screen.blit(text, [0,0])
     pygame.display.update()
 pygame.quit()
