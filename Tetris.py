@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 
 blocks = [
     [[1,4,7],[3,4,5]], #straight
@@ -41,6 +42,32 @@ def draw_grid(colour = (100,100,100)):
             pygame.draw.rect(screen, colour, [x * grid_size + gap_width, y * grid_size + gap_height, 
             grid_size, grid_size], 1)
 
+def drop_block():
+    can_drop = True
+    for y in range(3):
+        for x in range(3):
+            if y * 3 + x in block.shape():  #checking existing x's and y's in the shape
+                if block.y + y >= rows - 1: #if touching the bottom of the screen
+                    can_drop = False
+    if can_drop:
+        block.y+=1
+
+def side_move(dx):
+    can_move_left = True
+    can_move_right = True
+    for y in range(3):
+        for x in range(3):
+            if y * 3 + x in block.shape():  #checking existing x's and y's in the shape
+                if block.x <= 0: #if touching the left side of the grid
+                    can_move_left = False
+                if block.x + x >= cols - 1: #if touching the right side of the grid
+                    can_move_right = False
+    if can_move_left and dx<0:
+        block.x += dx
+    if can_move_right and dx>0:
+        block.x += dx
+   
+
 
 
 pygame.init()
@@ -53,19 +80,33 @@ rows = screen.get_height()//grid_size
 gap_width = (screen.get_width() - cols*grid_size)//2
 gap_height = (screen.get_height() - rows*grid_size)//2
 block = Block(2,3) #instance of Block class
-block.type = 3
+block.type = 4
 block.rotation=1
 clock = pygame.time.Clock()
-fps = 5
+fps = 5 #frames per second
+game_board = []
+#initialise game board
+for i in range(cols):
+    new_col = []
+    for j in range(rows):
+        new_col.append((0,0,0))
+    game_board.append(new_col)
 while not game_over:
     clock.tick(fps)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
+            continue
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            side_move(-1)
+        if event.key == pygame.K_RIGHT:
+            side_move(1)
     screen.fill((0,0,0))
     draw_grid()
     draw_block()
-    block.y+=1
+    if event.type != pygame.KEYDOWN:
+        drop_block()
 
     pygame.display.update()
 pygame.quit()
