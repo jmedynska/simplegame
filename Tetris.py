@@ -19,7 +19,6 @@ colors = [
     (255,0,255), #magenda
     (0,255,255), #cyan
     (255,255,0), #yellow
-    (255,255,255), #white
     (192,192,192) # gray
 ]
 
@@ -155,7 +154,13 @@ for i in range(cols):
 
 score = 0
 font = pygame.font.SysFont('Arial',25,True,False)
+font2 = pygame.font.SysFont('Arial',50,True,False)
 pause_text = font.render("Paused", True, (255,255,255))
+game_over_text = font2.render("GAME OVER", True, (255,255,255))
+game_finished = False
+got_position = [screen.get_width()//2 - game_over_text.get_width()//2, 
+                screen.get_height()//2 - game_over_text.get_height()//2]
+
 
 while not game_over:
     clock.tick(fps)
@@ -187,11 +192,16 @@ while not game_over:
     if block is not None:
         draw_block()
         if event.type != pygame.KEYDOWN:
-            if not drop_block():
+            if not drop_block() and not game_finished:
                 score += find_lines()
                 block = Block(random.randint(2,cols-3),0)
+                if collides(0,0):
+                    game_finished = True
+
     
     text = font.render("Score: " + str(score), True, (255,255,255))
     screen.blit(text, [0,0])
+    if game_finished:
+        screen.blit(game_over_text,got_position)
     pygame.display.update()
 pygame.quit()
