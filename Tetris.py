@@ -55,13 +55,17 @@ gap_height = (screen.get_height() - rows*grid_size)//2
 block = Block(2,3) #instance of Block class
 block.type = 3
 block.rotation=1
+clock = pygame.time.Clock()
+fps = 5
 while not game_over:
+    clock.tick(fps)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_over = True
     screen.fill((0,0,0))
     draw_grid()
     draw_block()
+    block.y+=1
 
     pygame.display.update()
 pygame.quit()
