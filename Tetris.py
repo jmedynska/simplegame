@@ -13,16 +13,14 @@ blocks = [
 ]
 
 colors = [
-    (128,128,128),
-    (255,0,0),
-    (0,255,0),
-    (0,0,255),
-    (90,70,50),
-    (100,5,5),
-    (60,90,40),
-    (120,0,120),
-    (0,40,80),
-    (0,120,120)
+    (255,0,0), #red
+    (0,255,0), #green
+    (0,0,255), #yellow
+    (255,0,255), #magenda
+    (0,255,255), #cyan
+    (255,255,0), #yellow
+    (255,255,255), #white
+    (192,192,192) # gray
 ]
 
 class Block:
@@ -132,6 +130,7 @@ block.type = 4
 block.rotation=1
 clock = pygame.time.Clock()
 fps = 5 #frames per second
+pause = False
 game_board = []
 #initialise game board
 for i in range(cols):
@@ -150,12 +149,18 @@ while not game_over:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 rotate()
-    if event.type == pygame.KEYDOWN:
+            elif event.key == pygame.K_SPACE:
+                pause = ~(pause)
+            
+    if event.type == pygame.KEYDOWN and not pause:
         if event.key == pygame.K_LEFT:
             side_move(-1)
         if event.key == pygame.K_RIGHT:
             side_move(1)
         
+    if pause:
+        
+        continue
     screen.fill((0,0,0))
     draw_grid()
     if block is not None:
